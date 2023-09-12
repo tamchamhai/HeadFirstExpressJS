@@ -1,0 +1,24 @@
+{
+  "name": "learnexpressjs",
+  "version": "1.0.0",
+  "description": "My first blog using expressjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tamchamhai/HeadFirstExpressJS.git"
+  },
+  "keywords": [
+    "blog",
+    "expressjs",
+    "nodejs"
+  ],
+  "author": "jim.ngo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tamchamhai/HeadFirstExpressJS/issues"
+  },
+  "homepage": "https://github.com/tamchamhai/HeadFirstExpressJS#readme"
+}
