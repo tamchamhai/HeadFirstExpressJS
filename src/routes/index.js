@@ -1,4 +1,4 @@
-const newsRouter = require('./news') 
+const newsRouter = require('./news')
 const blogsRouter = require('./blogs')
 const siteRouter = require('./site')
 
@@ -11,4 +11,4 @@ function route(app) {
   app.use('/', siteRouter)
 }
 
-module.exports = route;
+module.exports = route

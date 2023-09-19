@@ -1,1 +1,14 @@
-<h1>Welcome to my blogs</h1>
+<div class='mt-2 row'>
+  {{#each blogs}}
+    <div class='col-sm-4 my-2 p-0'>
+      <div class='card m-2'>
+        <h5 class='card-header'>{{this.name}}</h5>
+        <div class='card-body'>
+          <h5 class='card-title'>{{this.description}}</h5>
+          <p class='card-text'>{{this.content}}</p>
+          <a href='#' class='btn btn-primary'>Go to blog</a>
+        </div>
+      </div>
+    </div>
+  {{/each}}
+</div>
