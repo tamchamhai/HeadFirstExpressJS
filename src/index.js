@@ -6,6 +6,7 @@ const app = express()
 const port = 5000
 const route = require('./routes/index')
 const db = require('./config/db')
+const methodOverride = require('method-override')
 
 // Connect db
 db.connect()
@@ -20,6 +21,7 @@ app.use(
 )
 // Middleware handle data request from XML, axios, fetch.
 app.use(express.json())
+app.use(methodOverride('_method'))
 
 // Watch log on server
 app.use(morgan('combined'))
@@ -29,6 +31,9 @@ app.engine(
   'hbs',
   handlebars.engine({
     extname: 'hbs',
+    helpers: {
+      sum: (a, b) => a + b,
+    },
   })
 )
 app.set('view engine', 'hbs')

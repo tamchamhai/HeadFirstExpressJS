@@ -1,0 +1,127 @@
+<div class="my-4 d-flex justify-content-between">
+  <h3 class=''>User blogs</h3>
+  <a class='btn btn-primary d-block' href='/user/stored-blog'>Back</a>
+</div>
+
+<table class='table'>
+  <thead>
+    <tr>
+      <th scope='col'>#</th>
+      <th scope='col'>Blog name</th>
+      <th scope='col'>Blog ID</th>
+      <th scope='col'>Description</th>
+      <th scope='col'>Created At</th>
+      <th scope='col'>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each blog}}
+      <tr>
+        <th scope='row'>{{sum @index 1}}</th>
+        <td>{{this.name}}</td>
+        <td>{{this.slug}}</td>
+        <td>{{this.description}}</td>
+        <td>{{this.createdAt}}</td>
+        <td class='d-flex'>
+          <a
+            href=""
+            class='btn btn-primary mr-2 btn-restore'
+            data-id="{{this._id}}"
+          >Restore</a>
+          <button
+            type='button'
+            class='btn btn-danger'
+            data-toggle='modal'
+            data-target='#confirmDeleteBlog'
+            data-id='{{this._id}}'
+          >
+            Force delete
+          </button>
+        </td>
+      </tr>
+
+    {{else}}
+      <tr>
+        <td colspan='5' class='text-center'>
+          You don't have any blog.
+          <a href='/blogs/create-blog'>Add a blog now?</a>
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+{{! confirm to delete blog }}
+<div
+  class='modal fade'
+  id='confirmDeleteBlog'
+  tabindex='-1'
+  aria-labelledby='confirmDeleteBlogLabel'
+  aria-hidden='true'
+>
+  <div class='modal-dialog'>
+    <div class='modal-content'>
+      <div class='modal-header'>
+        <h5 class='modal-title' id='confirmDeleteBlogLabel'>Delete blog</h5>
+        <button
+          type='button'
+          class='close'
+          data-dismiss='modal'
+          aria-label='Close'
+        >
+          <span aria-hidden='true'>&times;</span>
+        </button>
+      </div>
+      <div class='modal-body'>
+        Do you sure to delete this blog?
+      </div>
+      <div class='modal-footer'>
+        <button
+          id='btn_delete_blog'
+          type='button'
+          class='btn btn-danger'
+        >Delete</button>
+        <button
+          type='button'
+          class='btn btn-secondary'
+          data-dismiss='modal'
+        >Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form method='POST' name='force_delete_blog_form'></form>
+<form method='POST' name='restore_blog_form'></form>
+
+<script>
+  // call function after DOM loaded
+  document.addEventListener('DOMContentLoaded', function() { 
+    let blogID; 
+    let btnDeleteBlog = document.getElementById('btn_delete_blog');
+    let formDeleteBlog = document.forms['force_delete_blog_form'];
+    let formRestoreBlog = document.forms['restore_blog_form'];
+    let btnRestore = $('.btn-restore')
+    
+    // confirm force delete
+    $('#confirmDeleteBlog').on('show.bs.modal', function (event) { 
+      let button = $(event.relatedTarget); 
+      blogID = button.data('id'); 
+      let modal = $(this); 
+    })
+    
+    btnDeleteBlog.onclick = function() { 
+      console.log('🚀 => blogID:', blogID);
+      formDeleteBlog.action = '/blogs/' + blogID + '/force?_method=DELETE' 
+      formDeleteBlog.submit();
+    }; 
+
+    // restore
+    btnRestore.click(function(e) {
+      e.preventDefault();
+      let blogRestoreId = $(this).data('id');
+      formRestoreBlog.action  = '/blogs/' + blogRestoreId + '/restore?_method=PATCH';
+      formRestoreBlog.submit(); 
+    })
+  });
+</script>

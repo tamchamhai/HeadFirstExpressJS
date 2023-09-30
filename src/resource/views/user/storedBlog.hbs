@@ -1,0 +1,147 @@
+<div class='my-4 d-flex justify-content-between'>
+  <h3 class=''>User blogs</h3>
+  <a class='btn btn-primary d-block' href='/user/blogs/trash'>Blog trash</a>
+</div>
+
+<form name="container_form" method="POST" action="/blogs/handle-form-actions">
+  <div class='d-flex align-items-center mb-3'>
+    <div class='custom-control custom-checkbox mr-3'>
+      <input type='checkbox' class='custom-control-input' id='select_all_blogs' />
+      <label class='custom-control-label' for='select_all_blogs'>Select all blogs</label>
+    </div>
+
+    <select class='form-control form-control-sm select-actions mr-3' name="action" required>
+      <option value="" selected>-- Select one option --</option>
+      <option value='delete'>Delete</option>
+    </select>
+
+    <button class='btn btn-primary mr-3 check-all-submit ' disabled >Apply</button>
+  </div>
+
+  <table class='table'>
+    <thead>
+      <tr>
+        <th scope='col'></th>
+        <th scope='col'>#</th>
+        <th scope='col'>Blog name</th>
+        <th scope='col'>Blog ID</th>
+        <th scope='col'>Description</th>
+        <th scope='col'>Created At</th>
+        <th scope='col'>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each blog}}
+      <tr>
+        <th>
+          <div scope='row' class='custom-control custom-checkbox'>
+            <input type='checkbox' class='custom-control-input select_single_blog' id="blog_{{this._id}}"
+              name="blogIds[]" value='{{this._id}}' />
+            <label class='custom-control-label' for='blog_{{this._id}}'></label>
+          </div>
+        </th>
+        <th scope='row'>{{sum @index 1}}</th>
+        <td>{{this.name}}</td>
+        <td>{{this.slug}}</td>
+        <td>{{this.description}}</td>
+        <td>{{this.createdAt}}</td>
+        <td class='d-flex'>
+          <a class='btn btn-primary mr-2' href='/blogs/{{this._id}}/edit'>Edit</a>
+          <button type='button' class='btn btn-danger' data-toggle='modal' data-target='#confirmDeleteBlog'
+            data-id='{{this._id}}'>
+            Delete
+          </button>
+        </td>
+      </tr>
+
+      {{else}}
+      <tr>
+        <td colspan='5' class='text-center'>
+          You don't have any blog.
+          <a href='/blogs/create-blog'>Add a blog now?</a>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</form>
+
+{{! confirm to delete blog }}
+<div class='modal fade' id='confirmDeleteBlog' tabindex='-1' aria-labelledby='confirmDeleteBlogLabel'
+  aria-hidden='true'>
+  <div class='modal-dialog'>
+    <div class='modal-content'>
+      <div class='modal-header'>
+        <h5 class='modal-title' id='confirmDeleteBlogLabel'>Delete blog</h5>
+        <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+          <span aria-hidden='true'>&times;</span>
+        </button>
+      </div>
+      <div class='modal-body'>
+        Do you sure to delete this blog?
+      </div>
+      <div class='modal-footer'>
+        <button id='btn_delete_blog' type='button' class='btn btn-danger'>Delete</button>
+        <button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<form method='POST' name='delete_blog_form'></form>
+
+<script>
+  // call function after DOM loaded
+  document.addEventListener('DOMContentLoaded', function () {
+    // Handle delete blog
+    let blogID;
+    let btnDeleteBlog = document.getElementById('btn_delete_blog');
+    let formDeleteBlog = document.forms['delete_blog_form'];
+    // let containerFormBlog = document.forms['container_form'];
+    let containerFormBlog = $('form[name="container_form"]');
+
+    $('#confirmDeleteBlog').on('show.bs.modal', function (event) {
+      let button = $(event.relatedTarget);
+      blogID = button.data('id');
+      let modal = $(this)
+    });
+
+    btnDeleteBlog.onclick = function () {
+      formDeleteBlog.action = '/blogs/' + blogID + '?_method=DELETE';
+      formDeleteBlog.submit();
+    };
+
+    // Handle select blog
+    let checkAllBlogs = $('#select_all_blogs');
+    let blogItemCheckbox = $('input[name="blogIds[]"]');
+    let checkAllSubmitBtn = $('.check-all-submit')
+    checkAllBlogs.change(function () {
+      let isCheckedAll = $(this).prop('checked');
+      blogItemCheckbox.prop('checked', isCheckedAll);
+      renderCheckAllSubmitButton();
+    });
+
+    blogItemCheckbox.change(function () {
+      let isCheckedAllItem = blogItemCheckbox.length === $('input[name="blogIds[]"]:checked').length;
+      checkAllBlogs.prop('checked', isCheckedAllItem);
+      renderCheckAllSubmitButton();
+    })
+
+    // Check all submit button click
+    containerFormBlog.on('submit', function(e) {
+      let isDisabledSubmit = checkAllSubmitBtn.hasClass('disabled');
+      if (isDisabledSubmit) {
+        e.preventDefault();
+      } 
+    })
+
+    function renderCheckAllSubmitButton() {
+      let checkedCount = $('input[name="blogIds[]"]:checked').length;
+      if (checkedCount > 0) {
+        checkAllSubmitBtn.attr('disabled', false);
+      } else {
+        checkAllSubmitBtn.attr('disabled', true);
+      }
+    }
+  });
+</script>

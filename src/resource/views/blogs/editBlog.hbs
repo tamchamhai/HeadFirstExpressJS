@@ -1,0 +1,46 @@
+<div class='mx-4 my-2'>
+  <h4>Edit a blog</h4>
+  <form method='post' action='/blogs/{{blog._id}}/update?_method=PUT'>
+    <div class='form-group'>
+      <label for='name'>Blog name</label>
+      <input
+        type='text'
+        class='form-control'
+        value='{{blog.name}}'
+        id='name'
+        name='name'
+        placeholder='Input you blog name'
+      />
+    </div>
+    <div class='form-group'>
+      <label for='slug'>BLog ID</label>
+      <input
+        type='text'
+        class='form-control'
+        value='{{blog.slug}}'
+        id='slug'
+        name='slug'
+        placeholder='Input you blog ID'
+      />
+    </div>
+    <div class='form-group'>
+      <label for='description'>Description</label>
+      <textarea
+        class='form-control'
+        name='description'
+        id='description'
+        rows='3'
+      >{{blog.description}}</textarea>
+    </div>
+    <div class='form-group'>
+      <label for='content'>Content</label>
+      <textarea
+        class='form-control'
+        id='content'
+        name='content'
+        rows='3'
+      >{{blog.content}}</textarea>
+    </div>
+    <button class='btn btn-primary' type='submit'>Submit</button>
+  </form>
+</div>
